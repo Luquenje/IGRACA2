@@ -162,22 +162,22 @@ void Tank::HandleKeyDown(WPARAM wParam) {
 	switch (wParam) {
 	case VK_LEFT:
 		glMultMatrixf(base->matrix);
-		glRotatef(-2, 0, 0, 1);
+		glRotatef(2, 0, 0, 1);
 		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
 		break;
 	case VK_RIGHT:
 		glMultMatrixf(base->matrix);
-		glRotatef(2, 0, 0, 1);
+		glRotatef(-2, 0, 0, 1);
 		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
 		break;
 	case VK_DOWN:
 		glMultMatrixf(lowerarmjoint->matrix);
-		glRotatef(-2, 1, 0, 0);
+		glRotatef(2, 1, 0, 0);
 		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
 		break;
 	case VK_UP:
 		glMultMatrixf(lowerarmjoint->matrix);
-		glRotatef(2, 1, 0, 0);
+		glRotatef(-2, 1, 0, 0);
 		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
 		break;
 	case VK_A:
@@ -248,6 +248,7 @@ void Tank::DrawLowerArm() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, redPlasticMaterial.diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, redPlasticMaterial.specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, redPlasticMaterial.shininess);
+	glRotatef(90.0f, 1.0, 0, 0);
 	gluCylinder(Object, .15, .15, ArmHeight, 16, 16);
 }
 
