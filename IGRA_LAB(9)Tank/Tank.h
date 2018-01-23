@@ -43,9 +43,12 @@ public:
 	double yPos;
 	double zPos;
 	double yRotation;
+	float dist;
+	float tiltAngle;
+	float yawAngle;
 	float ArmHeight;
 	Tank();
-	void Rotate(double angle);
+	void Rotate(float angle);
 	void MoveForward(double dist);
 	float degToRad(float degAngle);
 	void BuildTree();
@@ -57,6 +60,12 @@ public:
 	void DrawUpperArm();
 	void DrawJoint();
 	void HandleKeyDown(WPARAM wParam);
+
+	void DrawMissile();
+	float xMissile;
+	float yMissile;
+	float zMissile;
+
 	~Tank();
 };
 

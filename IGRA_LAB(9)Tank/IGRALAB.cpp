@@ -611,6 +611,7 @@ void DrawGLScene() {
 	glEnable(GL_LIGHTING);
 	//glTranslatef(0, 0, moveFoward);
 	tank->Draw();
+	tank->DrawMissile();
 	glDisable(GL_LIGHTING);
 
 	//tank->Draw();

@@ -103,9 +103,9 @@ void Tank::DrawFunction(int id)
 	case DRAW_LOWERARM_FUNCTION_ID:
 		DrawLowerArm();
 		break;
-	//case DRAW_UPPERARM_FUNCTION_ID:
-	//	DrawUpperArm();
-	//	break;
+	case DRAW_UPPERARM_FUNCTION_ID:
+		DrawUpperArm();
+		break;
 	case DRAW_JOINT_FUNCTION_ID:
 		DrawJoint();
 		break;
@@ -130,6 +130,11 @@ void Tank::DrawTree(TreeNode* root) {
 
 }
 
+float Tank::degToRad(float degAngle) {
+	double pi = 3.1415926535; // You could be more precise!
+	return degAngle / 180.0 * pi;
+}
+
 void Tank::MoveForward(double dist) {
 	// Movement must be based on orientation of player
 	double deltaX = 0;
@@ -141,15 +146,13 @@ void Tank::MoveForward(double dist) {
 	xPos = xPos + deltaX;
 	zPos = zPos + deltaZ;
 }
-void Tank::Rotate(double angle) {
+
+void Tank::Rotate(float angle) {
 	// Update the rotation (yaw)
+	yawAngle -= degToRad(angle);
 	yRotation = yRotation + angle;
 }
 
-float Tank::degToRad(float degAngle) {
-	double pi = 3.1415926535; // You could be more precise!
-	return degAngle / 180.0 * pi;
-}
 
 void Tank::HandleKeyDown(WPARAM wParam) {
 	double dist = 0.1;
@@ -162,21 +165,25 @@ void Tank::HandleKeyDown(WPARAM wParam) {
 	switch (wParam) {
 	case VK_LEFT:
 		glMultMatrixf(base->matrix);
+		yawAngle -= degToRad(2);
 		glRotatef(2, 0, 0, 1);
 		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
 		break;
 	case VK_RIGHT:
 		glMultMatrixf(base->matrix);
+		yawAngle += degToRad(2);
 		glRotatef(-2, 0, 0, 1);
 		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
 		break;
 	case VK_DOWN:
 		glMultMatrixf(lowerarmjoint->matrix);
+		tiltAngle -= degToRad(2);
 		glRotatef(2, 1, 0, 0);
 		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
 		break;
 	case VK_UP:
 		glMultMatrixf(lowerarmjoint->matrix);
+		tiltAngle += degToRad(2);
 		glRotatef(-2, 1, 0, 0);
 		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
 		break;
@@ -239,7 +246,8 @@ void Tank::DrawUpperArm() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, greenPlasticMaterial.diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, greenPlasticMaterial.specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, greenPlasticMaterial.shininess);
-	gluCylinder(Object, .15, .15, ArmHeight, 16, 16);
+	gluCylinder(Object, .4, .4, .45, 16, 16);
+	gluDisk(Object, 0, .4, 16, 16);
 }
 
 void Tank::DrawLowerArm() {
@@ -248,10 +256,86 @@ void Tank::DrawLowerArm() {
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, redPlasticMaterial.diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, redPlasticMaterial.specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, redPlasticMaterial.shininess);
-	glRotatef(90.0f, 1.0, 0, 0);
+	//glRotatef(90.0f, 1.0, 0, 0);
 	gluCylinder(Object, .15, .15, ArmHeight, 16, 16);
+	
 }
 
+void Tank::DrawMissile() {
+	dist = xPos + ArmHeight*cos(tiltAngle);
+	yMissile = 0.4 + ArmHeight* sin(tiltAngle);
+	xMissile = xPos + dist*cos(yawAngle);
+	zMissile = zPos + dist*sin(yawAngle);
+
+	GLUquadric *Object = gluNewQuadric();
+	
+	glMaterialfv(GL_FRONT, GL_AMBIENT, yellowPlasticMaterial.ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, yellowPlasticMaterial.diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, yellowPlasticMaterial.specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, yellowPlasticMaterial.shininess);
+	
+	
+	glTranslatef(xMissile, yMissile, zMissile);
+	gluSphere(Object, 0.25, 64, 64);
+
+	//glEnable(GL_LIGHTING);
+	//glEnable(GL_CULL_FACE);
+	//glFrontFace(GL_CW); // Vertices in clockwise order
+	//glPolygonMode(GL_FRONT, GL_FILL); // Solid cube
+	//								  // Front Face in green
+	//								  // Vertices in clock wise order v0, v1, v2, v3
+	//GLfloat blue[] = { 0, 0, 1, 0 };
+	//glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
+
+	////Back
+	//glBegin(GL_POLYGON);
+	//glColor3f(0.0, 0.0, 1.0);//Red	
+	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile -0.1); // v6
+	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile -0.1); // v5
+	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile -0.1); // v4
+	//glEnd();
+	////Bottom
+	//glBegin(GL_POLYGON);
+	//glColor3f(0.0, 0.0, 1.0);//Red		
+	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile -0.1); // v7
+	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile -0.1); // v4
+	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile +0.1); // v0
+	//glEnd();
+	////Front
+	//glBegin(GL_POLYGON); // 0, 1, 2, 3
+	//glColor3f(0.0, 0.0, 1.0);//Red	
+	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile+ 0.1); // v0 Left Bottom
+	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile +0.1); // v1 Left Top
+	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile+0.1); // v2 Right Top
+	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile +0.1); // v3 Right Bottom
+	//glEnd();
+	////Top
+	//glBegin(GL_POLYGON);
+	//glColor3f(0.0, 0.0, 1.0);//Red	
+	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile +0.1); // v1
+	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile -0.1); // v5
+	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile -0.1); // v6
+	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile+ 0.1); // v2
+	//glEnd();
+	////Right
+	//glBegin(GL_POLYGON);
+	//glColor3f(0.0, 0.0, 1.0);//Red	
+	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile +0.1); // v3
+	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile+ 0.1); // v2
+	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile -0.1); // v6
+	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile -0.1); // v7
+	//glEnd();
+	////Left
+	//glBegin(GL_POLYGON);
+	//glColor3f(0.0, 0.0, 1.0);//Red	
+	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile+0.1); // v0
+	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile -0.1); // v4
+	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile -0.1); // v5
+	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile+0.1); // v1
+	//glEnd();
+	//glDisable(GL_LIGHTING);
+	
+}
 
 void Tank::BuildTree() {
 
@@ -269,6 +353,7 @@ void Tank::BuildTree() {
 	lowerarmjoint->child = 0;
 	lowerarmjoint->drawFunctionID = DRAW_JOINT_FUNCTION_ID;
 	glTranslatef(0, 0, 0.4);
+	glRotatef(90.0f, 1.0, 0, 0);
 	glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
 
 	glLoadIdentity();
@@ -278,24 +363,27 @@ void Tank::BuildTree() {
 	glTranslatef(0, 0, 0.1);
 	glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmnode->matrix);//lower arm
 
-	/*glLoadIdentity();
-	upperarmjoint = new TreeNode;
-	upperarmjoint->child = 0;
-	upperarmjoint->drawFunctionID = DRAW_JOINT_FUNCTION_ID;
-	glTranslatef(0, 0, ArmHeight);
-	glGetFloatv(GL_MODELVIEW_MATRIX, upperarmjoint->matrix);
+
+	//glLoadIdentity();
+	//upperarmjoint = new TreeNode;
+	//upperarmjoint->child = 0;
+	//upperarmjoint->drawFunctionID = DRAW_JOINT_FUNCTION_ID;
+	//glTranslatef(0, 0, ArmHeight);
+	//glGetFloatv(GL_MODELVIEW_MATRIX, upperarmjoint->matrix);
 
 	glLoadIdentity();
 	upperarmnode = new TreeNode;
 	upperarmnode->child = 0;
 	upperarmnode->drawFunctionID = DRAW_UPPERARM_FUNCTION_ID;
-	glTranslatef(0, 0, 0.1);
-	glGetFloatv(GL_MODELVIEW_MATRIX, upperarmnode->matrix);*/
+	glTranslatef(0, 0, 1.2);
+	glGetFloatv(GL_MODELVIEW_MATRIX, upperarmnode->matrix);
+
+	
 
 	base->child = lowerarmjoint;
 	lowerarmjoint->child = lowerarmnode;
-	/*lowerarmnode->child = upperarmjoint;
-	upperarmjoint->child = upperarmnode;*/
+	lowerarmnode->child = upperarmnode;
+	//upperarmjoint->child = upperarmnode;
 }
 
 Tank::~Tank()
