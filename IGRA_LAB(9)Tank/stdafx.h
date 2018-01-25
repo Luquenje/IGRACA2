@@ -20,5 +20,25 @@
 
 using namespace std;
 
+static void debug(std::string log)
+{
+	OutputDebugStringA(log.c_str());
+	OutputDebugStringA("\n");
+}
+//Logs a string from a form of char array
+static void debug(char a[])
+{
+	OutputDebugStringA(a);
+	OutputDebugStringA("\n");
+}
+
+static void debug(char a[], std::string log)
+{
+	OutputDebugStringA(a);
+	OutputDebugStringA(" : ");
+	OutputDebugStringA(log.c_str());
+	OutputDebugStringA("\n");
+}
+
 
 // TODO: reference additional headers your program requires here

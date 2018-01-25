@@ -24,6 +24,7 @@ Tank::Tank()
 	};
 	ArmHeight = 1.5;
 	BuildTree();
+	yawAngle = degToRad(-90);
 }
 
 void Tank::Draw() {
@@ -142,6 +143,8 @@ void Tank::MoveForward(double dist) {
 	// Calculate translation as based on current yRotation angle
 	deltaX = -dist*sin(degToRad(yRotation));
 	deltaZ = -dist*cos(degToRad(yRotation));
+
+	
 	// Update the position
 	xPos = xPos + deltaX;
 	zPos = zPos + deltaZ;
@@ -263,10 +266,10 @@ void Tank::DrawLowerArm() {
 
 void Tank::DrawMissile() {
 	dist = xPos + ArmHeight*cos(tiltAngle);
-	yMissile = 0.4 + ArmHeight* sin(tiltAngle);
-	xMissile = xPos + dist*cos(yawAngle);
-	zMissile = zPos + dist*sin(yawAngle);
-
+	yMissile = (1.4 + ArmHeight* sin(tiltAngle));
+	xMissile = (xPos + dist*cos(yawAngle));
+	zMissile = (zPos + dist*sin(yawAngle));
+	debug("yangle", to_string(yawAngle));
 	GLUquadric *Object = gluNewQuadric();
 	
 	glMaterialfv(GL_FRONT, GL_AMBIENT, yellowPlasticMaterial.ambient);
