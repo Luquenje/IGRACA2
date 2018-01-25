@@ -202,7 +202,9 @@ void Tank::HandleKeyDown(WPARAM wParam) {
 	case VK_S:
 		MoveForward(-0.1);
 		break;
-			
+	case VK_SPACE:
+		
+		break;
 	/*case VK_PRIOR:
 		glMultMatrixf(upperarmjoint->matrix);
 		glRotatef(-2, 1, 0, 0);
@@ -264,12 +266,17 @@ void Tank::DrawLowerArm() {
 	
 }
 
+void Tank::ShootMissile() {
+	
+
+}
+
 void Tank::DrawMissile() {
 	dist = ArmHeight*cos(tiltAngle);
 	yMissile = (1.4 + ArmHeight* sin(tiltAngle));
 	xMissile = (xPos + dist*cos(yawAngle));
 	zMissile = (zPos + dist*sin(yawAngle));
-	debug("yangle", to_string(yawAngle));
+	
 	GLUquadric *Object = gluNewQuadric();
 	
 	glMaterialfv(GL_FRONT, GL_AMBIENT, yellowPlasticMaterial.ambient);
@@ -277,9 +284,16 @@ void Tank::DrawMissile() {
 	glMaterialfv(GL_FRONT, GL_SPECULAR, yellowPlasticMaterial.specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, yellowPlasticMaterial.shininess);
 	
+	float yawAngleInDegree = yawAngle * 180 / 3.1415926535;
+
 	
 	glTranslatef(xMissile, yMissile, zMissile);
-	gluSphere(Object, 0.25, 64, 64);
+	
+
+	gluCylinder(Object, .2, .2, 1.0, 16, 16);
+
+	//debug
+	debug("yangle", to_string(yawAngleInDegree));
 
 	//glEnable(GL_LIGHTING);
 	//glEnable(GL_CULL_FACE);

@@ -38,6 +38,8 @@ public:
 	Material yellowPlasticMaterial;
 	Material greenPlasticMaterial;
 
+	float xShoot;
+	float yShoot;
 
 	double xPos;
 	double yPos;
@@ -61,6 +63,7 @@ public:
 	void DrawJoint();
 	void HandleKeyDown(WPARAM wParam);
 
+	void ShootMissile();
 	void DrawMissile();
 	float xMissile;
 	float yMissile;
