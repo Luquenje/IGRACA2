@@ -265,7 +265,7 @@ void Tank::DrawLowerArm() {
 }
 
 void Tank::DrawMissile() {
-	dist = xPos + ArmHeight*cos(tiltAngle);
+	dist = ArmHeight*cos(tiltAngle);
 	yMissile = (1.4 + ArmHeight* sin(tiltAngle));
 	xMissile = (xPos + dist*cos(yawAngle));
 	zMissile = (zPos + dist*sin(yawAngle));
