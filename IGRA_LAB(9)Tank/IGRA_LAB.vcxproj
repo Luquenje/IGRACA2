@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IGRALAB.h" />
+    <ClInclude Include="Missile.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Road.h" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IGRALAB.cpp" />
+    <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Road.cpp" />
     <ClCompile Include="Tank.cpp" />

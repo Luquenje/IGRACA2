@@ -9,7 +9,7 @@
 #include <vector>
 #include <string>
 #include "Tank.h"
-
+#include "Missile.h"
 
 // for IGRA - OPENGL
 #include <gl\gl.h> // Header File For The OpenGL32 Library
@@ -607,11 +607,13 @@ void DrawGLScene() {
 	glPopMatrix();*/
 
 	//moveFoward -= accelerator;
+	Missile::SetTimePassed(GetTimePassedSinceLastTime());
 	DrawPlane();
 	glEnable(GL_LIGHTING);
 	//glTranslatef(0, 0, moveFoward);
 	tank->Draw();
-	tank->DrawMissile();
+	Missile::DrawAllMissile();
+	
 	glDisable(GL_LIGHTING);
 
 	//tank->Draw();

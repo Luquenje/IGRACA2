@@ -38,8 +38,11 @@ public:
 	Material yellowPlasticMaterial;
 	Material greenPlasticMaterial;
 
-	float xShoot;
-	float yShoot;
+	bool isFired = false;
+
+	float xMissileRot;
+	float yMissileRot;
+	double deltaTime;
 
 	double xPos;
 	double yPos;
@@ -63,6 +66,8 @@ public:
 	void DrawJoint();
 	void HandleKeyDown(WPARAM wParam);
 
+
+	double GetDeltaTime(double deltatime);
 	void ShootMissile();
 	void DrawMissile();
 	float xMissile;

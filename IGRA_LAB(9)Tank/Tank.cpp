@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Tank.h"
-
+#include "Missile.h"
 
 Tank::Tank()
 {
+
 	redPlasticMaterial = {
 		{ 0.4f, 0.0f, 0.0f, 1.0f }, // Ambient 
 		{ 0.9f, 0.0f, 0.0f, 1.0f }, // Diffuse 
@@ -25,6 +26,7 @@ Tank::Tank()
 	ArmHeight = 1.5;
 	BuildTree();
 	yawAngle = degToRad(-90);
+	
 }
 
 void Tank::Draw() {
@@ -203,6 +205,17 @@ void Tank::HandleKeyDown(WPARAM wParam) {
 		MoveForward(-0.1);
 		break;
 	case VK_SPACE:
+			dist = ArmHeight*cos(tiltAngle);
+			yMissile = (1.4 + ArmHeight* sin(tiltAngle));
+			xMissile = (xPos + dist*cos(yawAngle));
+			zMissile = (zPos + dist*sin(yawAngle));
+
+			 xMissileRot = yawAngle * 180 / 3.1415926535;
+			 yMissileRot = tiltAngle * 180 / 3.1415926535;
+
+			 
+			 Missile missile = Missile(xMissile, yMissile, zMissile, xMissileRot, yMissileRot);
+			 Missile::missileList.push_back(missile);
 		
 		break;
 	/*case VK_PRIOR:
@@ -266,93 +279,45 @@ void Tank::DrawLowerArm() {
 	
 }
 
+//double Tank::GetDeltaTime(double deltatime)
+//{
+//	delta
+//}
+
 void Tank::ShootMissile() {
 	
 
 }
 
-void Tank::DrawMissile() {
-	dist = ArmHeight*cos(tiltAngle);
-	yMissile = (1.4 + ArmHeight* sin(tiltAngle));
-	xMissile = (xPos + dist*cos(yawAngle));
-	zMissile = (zPos + dist*sin(yawAngle));
-	
-	GLUquadric *Object = gluNewQuadric();
-	
-	glMaterialfv(GL_FRONT, GL_AMBIENT, yellowPlasticMaterial.ambient);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, yellowPlasticMaterial.diffuse);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, yellowPlasticMaterial.specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, yellowPlasticMaterial.shininess);
-	
-	float yawAngleInDegree = yawAngle * 180 / 3.1415926535;
 
-	
-	glTranslatef(xMissile, yMissile, zMissile);
-	
 
-	gluCylinder(Object, .2, .2, 1.0, 16, 16);
-
-	//debug
-	debug("yangle", to_string(yawAngleInDegree));
-
-	//glEnable(GL_LIGHTING);
-	//glEnable(GL_CULL_FACE);
-	//glFrontFace(GL_CW); // Vertices in clockwise order
-	//glPolygonMode(GL_FRONT, GL_FILL); // Solid cube
-	//								  // Front Face in green
-	//								  // Vertices in clock wise order v0, v1, v2, v3
-	//GLfloat blue[] = { 0, 0, 1, 0 };
-	//glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, blue);
-
-	////Back
-	//glBegin(GL_POLYGON);
-	//glColor3f(0.0, 0.0, 1.0);//Red	
-	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile -0.1); // v6
-	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile -0.1); // v5
-	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile -0.1); // v4
-	//glEnd();
-	////Bottom
-	//glBegin(GL_POLYGON);
-	//glColor3f(0.0, 0.0, 1.0);//Red		
-	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile -0.1); // v7
-	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile -0.1); // v4
-	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile +0.1); // v0
-	//glEnd();
-	////Front
-	//glBegin(GL_POLYGON); // 0, 1, 2, 3
-	//glColor3f(0.0, 0.0, 1.0);//Red	
-	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile+ 0.1); // v0 Left Bottom
-	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile +0.1); // v1 Left Top
-	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile+0.1); // v2 Right Top
-	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile +0.1); // v3 Right Bottom
-	//glEnd();
-	////Top
-	//glBegin(GL_POLYGON);
-	//glColor3f(0.0, 0.0, 1.0);//Red	
-	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile +0.1); // v1
-	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile -0.1); // v5
-	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile -0.1); // v6
-	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile+ 0.1); // v2
-	//glEnd();
-	////Right
-	//glBegin(GL_POLYGON);
-	//glColor3f(0.0, 0.0, 1.0);//Red	
-	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile +0.1); // v3
-	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile+ 0.1); // v2
-	//glVertex3f(xMissile + 0.1, yMissile + 0.1, zMissile -0.1); // v6
-	//glVertex3f(xMissile + 0.1, yMissile + -0.1, zMissile -0.1); // v7
-	//glEnd();
-	////Left
-	//glBegin(GL_POLYGON);
-	//glColor3f(0.0, 0.0, 1.0);//Red	
-	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile+0.1); // v0
-	//glVertex3f(xMissile + -0.1, yMissile + -0.1, zMissile -0.1); // v4
-	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile -0.1); // v5
-	//glVertex3f(xMissile + -0.1, yMissile + 0.1, zMissile+0.1); // v1
-	//glEnd();
-	//glDisable(GL_LIGHTING);
-	
-}
+//void Tank::DrawMissile() {
+//	if (isFired) {
+//		GLUquadric *Object = gluNewQuadric();
+//
+//		glMaterialfv(GL_FRONT, GL_AMBIENT, yellowPlasticMaterial.ambient);
+//		glMaterialfv(GL_FRONT, GL_DIFFUSE, yellowPlasticMaterial.diffuse);
+//		glMaterialfv(GL_FRONT, GL_SPECULAR, yellowPlasticMaterial.specular);
+//		glMaterialfv(GL_FRONT, GL_SHININESS, yellowPlasticMaterial.shininess);
+//
+//
+//
+//		glTranslatef(xMissile, yMissile, zMissile);
+//		glRotatef(90, 0, 1.0, 0);
+//		glRotatef(-xMissileRot, 0, 1.0, 0);
+//		glRotatef(-yMissileRot, 1.0, 0, 0);
+//		gluCylinder(Object, .2, .2, 1.0, 16, 16);
+//
+//		//debug
+//		//debug("yangle", to_string(yawAngleInDegree));
+//
+//		//x = 5 * cos(degToRad(-xMissileRot)) * 
+//
+//	}
+//	
+//	
+//	
+//}
 
 void Tank::BuildTree() {
 
