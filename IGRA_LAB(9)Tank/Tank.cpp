@@ -214,7 +214,7 @@ void Tank::HandleKeyDown(WPARAM wParam) {
 			 yMissileRot = tiltAngle * 180 / 3.1415926535;
 
 			 
-			 Missile missile = Missile(xMissile, yMissile, zMissile, xMissileRot, yMissileRot);
+			 Missile missile = Missile(xMissile, yMissile, zMissile, yMissileRot, xMissileRot);
 			 Missile::missileList.push_back(missile);
 		
 		break;
