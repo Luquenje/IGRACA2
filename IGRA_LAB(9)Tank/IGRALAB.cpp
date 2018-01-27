@@ -558,7 +558,7 @@ void DrawGLScene() {
 	// origin (the intersection of the axis system)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	gluLookAt(xMouseOpenGL * 5, yMouseOpenGL * 5, 20, // Camera's position
+	gluLookAt(15, 15, 20, // Camera's position
 			  1, 0, 1, // Camera's target to look at
 			  0.0, 1.0, 0.0); // Orientation of camera
 	/*gluLookAt(1, 1, 1, // Camera's position
@@ -877,7 +877,7 @@ void DrawCube() {
 
 void DrawPlane() {
 	glEnable(GL_TEXTURE_2D);
-	glColor3f(1, 0, 0);
+	glColor3f(0, 0, 0.7);
 	/*glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
 		64, 64, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glTexParameterf(GL_TEXTURE_2D,
