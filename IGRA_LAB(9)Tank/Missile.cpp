@@ -49,11 +49,11 @@ float Missile::degToRad(float degAngle)
 
 void Missile::DrawMissile()
 {
-			dist = 20 * cos(degToRad(startTiltAngle)) * timePassed * 40;//yawangle
+			dist = 20 * cos(degToRad(startTiltAngle)) * timePassed;//yawangle
 			x =   dist*cos(degToRad(startYawAngle ));
 			z =  dist*sin(degToRad(startYawAngle ));
 
-			y = 20 * sin(degToRad(startTiltAngle )) * timePassed * 40 - 0.5*9.81*pow(timePassed * 40, 2);
+			y = 20 * sin(degToRad(startTiltAngle )) * timePassed - 0.5*9.81*pow(timePassed, 2);
 			
 			GLUquadric *Object = gluNewQuadric();
 
@@ -66,7 +66,7 @@ void Missile::DrawMissile()
 			glPushMatrix();
 			glTranslatef(xMissile + x, yMissile + y, zMissile + z);
 			glRotatef(90, 0, 1.0, 0);
-			glRotatef(startTiltAngle + fmod(startYawAngle, 180) > 0 ? timePassed * 40 * 40 : -timePassed * 40 * 40, 0, 0, 1);
+			glRotatef(startTiltAngle + fmod(startYawAngle, 180) > 0 ? timePassed * 40 : -timePassed * 40, 0, 0, 1);
 			glRotatef(-startYawAngle, 0, 1.0, 0);
 			
 

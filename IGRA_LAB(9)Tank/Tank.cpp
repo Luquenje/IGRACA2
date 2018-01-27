@@ -31,6 +31,7 @@ Tank::Tank()
 	maxSpeed = 20.0f;
 	tiltAngle = 0;
 	rotDeg = 0;
+	yTurretRot = 0;
 }
 
 void Tank::Draw() {
@@ -39,8 +40,8 @@ void Tank::Draw() {
 	glTranslatef(xPos, yPos + 0.075, zPos);
 	// Local rotation
 	glRotatef(yRotation + 180, 0, 1, 0);
-
 	DrawTree(base);
+
 	glEnable(GL_CULL_FACE);
 	glFrontFace(GL_CW); // Vertices in clockwise order
 	glPolygonMode(GL_FRONT, GL_FILL); // Solid cube
@@ -167,30 +168,40 @@ void Tank::TankUpdate(double deltaTime) {
 	glLoadIdentity();
 
 
-	/*if (GetAsyncKeyState(VK_LEFT)) {
+	if (GetAsyncKeyState(VK_LEFT) && !GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_RIGHT) && !GetAsyncKeyState(VK_DOWN)) {
 		glMultMatrixf(base->matrix);
 		yawAngle -= degToRad(2);
+		//yTurretRot += 2 * deltaTime;
 		glRotatef(2, 0, 0, 1);
 		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
 	}
-	if (GetAsyncKeyState(VK_RIGHT)) {
+	if (GetAsyncKeyState(VK_RIGHT) && !GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_DOWN) && !GetAsyncKeyState(VK_LEFT)) {
 		glMultMatrixf(base->matrix);
 		yawAngle += degToRad(2);
+		//yTurretRot -= 2 * deltaTime;
 		glRotatef(-2, 0, 0, 1);
 		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
 	}
-	if (GetAsyncKeyState(VK_DOWN)) {
+
+	if (GetAsyncKeyState(VK_DOWN) && !GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_RIGHT) && !GetAsyncKeyState(VK_LEFT)) {
 		glMultMatrixf(lowerarmjoint->matrix);
-		tiltAngle -= degToRad(2);
-		glRotatef(2, 1, 0, 0);
+		if (rotDeg > 0) {
+			tiltAngle -= degToRad(2);
+			rotDeg -= 2;
+			glRotatef(2, 1, 0, 0);
+		}
 		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
 	}
-	if (GetAsyncKeyState(VK_UP)) {
+	if (GetAsyncKeyState(VK_UP) && !GetAsyncKeyState(VK_DOWN) && !GetAsyncKeyState(VK_RIGHT) && !GetAsyncKeyState(VK_LEFT)) {
 		glMultMatrixf(lowerarmjoint->matrix);
-		tiltAngle += degToRad(2);
-		glRotatef(-2, 1, 0, 0);
+		if (rotDeg < 45) {
+			tiltAngle += degToRad(2);
+			rotDeg += 2;
+			glRotatef(-2, 1, 0, 0);
+		}
 		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
-	}*/
+	}
+
 	if (GetAsyncKeyState(VK_A)) {
 		Rotate(2); // Counter Clockwise
 	}
@@ -198,7 +209,7 @@ void Tank::TankUpdate(double deltaTime) {
 		Rotate(-2); // Clockwise
 	}
 	if (GetAsyncKeyState(VK_S)) {
-		currentSpeed -= accelerationRate * deltaTime;
+		currentSpeed -= accelerationRate * 0.01;
 
 		if (currentSpeed < -maxSpeed)
 		{
@@ -207,7 +218,7 @@ void Tank::TankUpdate(double deltaTime) {
 
 	}
 	if (GetAsyncKeyState(VK_W)) {
-		currentSpeed += accelerationRate * deltaTime;
+		currentSpeed += accelerationRate * 0.01;
 
 		if (currentSpeed > maxSpeed)
 		{
@@ -218,7 +229,7 @@ void Tank::TankUpdate(double deltaTime) {
 	{
 		if (currentSpeed > 0)
 		{
-			currentSpeed -= accelerationRate * 1.5 * deltaTime;
+			currentSpeed -= accelerationRate * 1.5 * 0.01;
 			if (currentSpeed < 0)
 			{
 				currentSpeed = 0;
@@ -226,7 +237,7 @@ void Tank::TankUpdate(double deltaTime) {
 		}
 		if (currentSpeed < 0)
 		{
-			currentSpeed += accelerationRate * 1.5 * deltaTime;
+			currentSpeed += accelerationRate * 1.5 * 0.01;
 			if (currentSpeed > 0)
 			{
 				currentSpeed = 0;
@@ -234,9 +245,9 @@ void Tank::TankUpdate(double deltaTime) {
 		}
 
 	}
-	MoveForward(currentSpeed * deltaTime);
+	MoveForward(currentSpeed * 0.01);
 
-	/*if (GetAsyncKeyState(VK_SPACE)) {
+	if (GetAsyncKeyState(VK_SPACE)) {
 		dist = ArmHeight*cos(tiltAngle);
 		yMissile = (1.4 + ArmHeight* sin(tiltAngle));
 		xMissile = (xPos + dist*cos(yawAngle));
@@ -248,76 +259,76 @@ void Tank::TankUpdate(double deltaTime) {
 
 		Missile missile = Missile(xMissile, yMissile, zMissile, yMissileRot, xMissileRot);
 		Missile::missileList.push_back(missile);
-	}*/
-
-	glPopMatrix();
-}
-
-void Tank::Shoot(WPARAM wParam, double deltaTime) {
-	double dist = 0.1;
-	glPushMatrix();
-	glLoadIdentity();
-
-	
-	switch (wParam) {
-	case VK_LEFT:
-		glMultMatrixf(base->matrix);
-		yawAngle -= degToRad(2);
-		glRotatef(2, 0, 0, 1);
-		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
-		break;
-	case VK_RIGHT:
-		glMultMatrixf(base->matrix);
-		yawAngle += degToRad(2);
-		glRotatef(-2, 0, 0, 1);
-		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
-		break;
-	case VK_DOWN:
-		glMultMatrixf(lowerarmjoint->matrix);
-		if (rotDeg > 0) {
-			tiltAngle -= degToRad(2);
-			rotDeg -= 2 * deltaTime;
-			glRotatef(2, 1, 0, 0);
-		}
-		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
-		break;
-	case VK_UP:
-		glMultMatrixf(lowerarmjoint->matrix);
-		if (rotDeg < 0.4) {
-			tiltAngle += degToRad(2);
-			rotDeg += 2 * deltaTime;
-			glRotatef(-2, 1, 0, 0);
-		}
-		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
-		break;
-	case VK_SPACE:
-			dist = ArmHeight*cos(tiltAngle);
-			yMissile = (1.4 + ArmHeight* sin(tiltAngle));
-			xMissile = (xPos + dist*cos(yawAngle));
-			zMissile = (zPos + dist*sin(yawAngle));
-
-			 xMissileRot = yawAngle * 180 / 3.1415926535;
-			 yMissileRot = tiltAngle * 180 / 3.1415926535;
-
-			 
-			 Missile missile = Missile(xMissile, yMissile, zMissile, yMissileRot, xMissileRot);
-			 Missile::missileList.push_back(missile);
-		
-		break;
-	/*case VK_PRIOR:
-		glMultMatrixf(upperarmjoint->matrix);
-		glRotatef(-2, 1, 0, 0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, upperarmjoint->matrix);
-		break;
-	case VK_NEXT:
-		glMultMatrixf(upperarmjoint->matrix);
-		glRotatef(2, 1, 0, 0);
-		glGetFloatv(GL_MODELVIEW_MATRIX, upperarmjoint->matrix);
-		break;*/
-
 	}
+
 	glPopMatrix();
 }
+
+//void Tank::Shoot(WPARAM wParam, double deltaTime) {
+//	double dist = 0.1;
+//	glPushMatrix();
+//	glLoadIdentity();
+//
+//	
+//	switch (wParam) {
+//	/*case VK_LEFT:
+//		glMultMatrixf(base->matrix);
+//		yawAngle -= degToRad(2);
+//		glRotatef(2, 0, 0, 1);
+//		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
+//		break;
+//	case VK_RIGHT:
+//		glMultMatrixf(base->matrix);
+//		yawAngle += degToRad(2);
+//		glRotatef(-2, 0, 0, 1);
+//		glGetFloatv(GL_MODELVIEW_MATRIX, base->matrix);
+//		break;
+//	case VK_DOWN:
+//		glMultMatrixf(lowerarmjoint->matrix);
+//		if (rotDeg > 0) {
+//			tiltAngle -= degToRad(2);
+//			rotDeg -= 2 * deltaTime;
+//			glRotatef(2, 1, 0, 0);
+//		}
+//		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
+//		break;
+//	case VK_UP:
+//		glMultMatrixf(lowerarmjoint->matrix);
+//		if (rotDeg < 0.4) {
+//			tiltAngle += degToRad(2);
+//			rotDeg += 2 * deltaTime;
+//			glRotatef(-2, 1, 0, 0);
+//		}
+//		glGetFloatv(GL_MODELVIEW_MATRIX, lowerarmjoint->matrix);
+//		break;*/
+//	/*case VK_SPACE:
+//			dist = ArmHeight*cos(tiltAngle);
+//			yMissile = (1.4 + ArmHeight* sin(tiltAngle));
+//			xMissile = (xPos + dist*cos(yawAngle));
+//			zMissile = (zPos + dist*sin(yawAngle));
+//
+//			 xMissileRot = yawAngle * 180 / 3.1415926535;
+//			 yMissileRot = tiltAngle * 180 / 3.1415926535;
+//
+//			 
+//			 Missile missile = Missile(xMissile, yMissile, zMissile, yMissileRot, xMissileRot);
+//			 Missile::missileList.push_back(missile);
+//		
+//		break;*/
+//	/*case VK_PRIOR:
+//		glMultMatrixf(upperarmjoint->matrix);
+//		glRotatef(-2, 1, 0, 0);
+//		glGetFloatv(GL_MODELVIEW_MATRIX, upperarmjoint->matrix);
+//		break;
+//	case VK_NEXT:
+//		glMultMatrixf(upperarmjoint->matrix);
+//		glRotatef(2, 1, 0, 0);
+//		glGetFloatv(GL_MODELVIEW_MATRIX, upperarmjoint->matrix);
+//		break;*/
+//
+//	}
+//	glPopMatrix();
+//}
 
 void Tank::DrawJoint() {
 	GLUquadric *Object = gluNewQuadric();

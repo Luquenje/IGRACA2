@@ -43,6 +43,7 @@ public:
 	float xMissileRot;
 	float yMissileRot;
 	double deltaTime;
+	float yTurretRot;
 
 	double rotDeg;
 	double xPos;

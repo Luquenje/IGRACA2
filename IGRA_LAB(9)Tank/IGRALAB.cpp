@@ -431,11 +431,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_KEYDOWN:							// Is A Key Being Held Down?
 	{
-		tank->Shoot(wParam, GetTimePassedSinceLastTime());
-		accelerator += 0.01;
-		if (accelerator > 1) {
-			accelerator = 1;
-		}
+		//tank->Shoot(wParam, GetTimePassedSinceLastTime());
+		
 		
 		keys[wParam] = TRUE;					// If So, Mark It As TRUE
 		return 0;								// Jump Back
@@ -443,10 +440,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_KEYUP:		
 	{// Has A Key Been Released?
-		accelerator -= 0.1;
-		if (accelerator <= 0) {
-			accelerator = 0;
-		}
+		
 		keys[wParam] = FALSE;					// If So, Mark It As FALSE
 		return 0;								// Jump Back
 	}
@@ -607,8 +601,9 @@ void DrawGLScene() {
 	glPopMatrix();*/
 
 	//moveFoward -= accelerator;
-	tank->TankUpdate(GetTimePassedSinceLastTime());
+
 	Missile::SetTimePassed(GetTimePassedSinceLastTime());
+	tank->TankUpdate(GetTimePassedSinceLastTime());
 	DrawPlane();
 	glEnable(GL_LIGHTING);
 	//glTranslatef(0, 0, moveFoward);
