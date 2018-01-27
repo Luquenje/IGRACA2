@@ -431,7 +431,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	
 	case WM_KEYDOWN:							// Is A Key Being Held Down?
 	{
-		tank->HandleKeyDown(wParam);
+		tank->Shoot(wParam, GetTimePassedSinceLastTime());
 		accelerator += 0.01;
 		if (accelerator > 1) {
 			accelerator = 1;
@@ -607,6 +607,7 @@ void DrawGLScene() {
 	glPopMatrix();*/
 
 	//moveFoward -= accelerator;
+	tank->TankUpdate(GetTimePassedSinceLastTime());
 	Missile::SetTimePassed(GetTimePassedSinceLastTime());
 	DrawPlane();
 	glEnable(GL_LIGHTING);
@@ -876,8 +877,8 @@ void DrawCube() {
 
 void DrawPlane() {
 	glEnable(GL_TEXTURE_2D);
-	glColor3f(1, 1, 1);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
+	glColor3f(1, 0, 0);
+	/*glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,
 		64, 64, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glTexParameterf(GL_TEXTURE_2D,
 		GL_TEXTURE_WRAP_S, GL_CLAMP);
@@ -886,7 +887,7 @@ void DrawPlane() {
 	glTexParameterf(GL_TEXTURE_2D,
 		GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameterf(GL_TEXTURE_2D,
-		GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		GL_TEXTURE_MIN_FILTER, GL_NEAREST);*/
 	
 	//glEnable(GL_LIGHTING);
 	glBegin(GL_POLYGON);

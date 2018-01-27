@@ -5,8 +5,6 @@
 #include "math.h"
 
 
-
-
 class Missile
 {
 public:

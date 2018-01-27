@@ -44,6 +44,7 @@ public:
 	float yMissileRot;
 	double deltaTime;
 
+	double rotDeg;
 	double xPos;
 	double yPos;
 	double zPos;
@@ -52,6 +53,9 @@ public:
 	float tiltAngle;
 	float yawAngle;
 	float ArmHeight;
+	float currentSpeed;
+	float accelerationRate;
+	float maxSpeed;
 	Tank();
 	void Rotate(float angle);
 	void MoveForward(double dist);
@@ -64,7 +68,8 @@ public:
 	void DrawLowerArm();
 	void DrawUpperArm();
 	void DrawJoint();
-	void HandleKeyDown(WPARAM wParam);
+	void Shoot(WPARAM wParam, double deltaTime);
+	void TankUpdate(double deltaTime);
 
 
 	double GetDeltaTime(double deltatime);
