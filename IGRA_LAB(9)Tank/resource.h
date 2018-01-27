@@ -12,15 +12,10 @@
 #define IDI_SMALL                       108
 #define IDC_IGRALAB                     109
 #define IDR_MAINFRAME                   128
-#define IDR_MENU1                       129
-#define ID_SHAPES_SQUARE                32771
-#define ID_SHAPES_TRIANGLE              32772
-#define ID_SHAPES_CIRCLE                32773
-#define ID_COLOUR_RED                   32774
-#define ID_COLOUR_GREEN                 32775
-#define ID_COLOUR_BLUE                  32776
-#define ID_MODE_SOLID                   32777
-#define ID_MODE_WIREFRAME               32778
+#define IDR_MENU2                       130
+#define ID_SPEED_SLOW                   32779
+#define ID_SPEED_MEDIUM                 32780
+#define ID_SPEED_FAST                   32781
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -28,8 +23,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
-#define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         32779
+#define _APS_NEXT_RESOURCE_VALUE        131
+#define _APS_NEXT_COMMAND_VALUE         32782
 #define _APS_NEXT_CONTROL_VALUE         1000
 #define _APS_NEXT_SYMED_VALUE           110
 #endif

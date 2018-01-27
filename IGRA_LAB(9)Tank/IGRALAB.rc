@@ -160,24 +160,13 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_SINGAPORE
 // Menu
 //
 
-IDR_MENU1 MENU
+IDR_MENU2 MENU
 BEGIN
-    POPUP "Shapes"
+    POPUP "Speed"
     BEGIN
-        MENUITEM "Square",                      ID_SHAPES_SQUARE
-        MENUITEM "Triangle",                    ID_SHAPES_TRIANGLE
-        MENUITEM "Circle",                      ID_SHAPES_CIRCLE
-    END
-    POPUP "Colour"
-    BEGIN
-        MENUITEM "Red",                         ID_COLOUR_RED
-        MENUITEM "Green",                       ID_COLOUR_GREEN
-        MENUITEM "Blue",                        ID_COLOUR_BLUE
-    END
-    POPUP "Mode"
-    BEGIN
-        MENUITEM "Solid",                       ID_MODE_SOLID
-        MENUITEM "Wireframe",                   ID_MODE_WIREFRAME
+        MENUITEM "Slow",                        ID_SPEED_SLOW
+        MENUITEM "Medium",                      ID_SPEED_MEDIUM
+        MENUITEM "Fast",                        ID_SPEED_FAST
     END
 END
 

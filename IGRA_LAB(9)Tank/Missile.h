@@ -15,7 +15,7 @@ public:
 		GLfloat shininess[4];
 	} Material;
 
-	Missile(float xpos, float ypos, float zpos, float tilt, float yaw);
+	Missile(float xpos, float ypos, float zpos, float tilt, float yaw, float Initvelocity);
 	Material yellowPlasticMaterial;
 	bool isFired = false;
 	float xMissileRot;
@@ -27,7 +27,7 @@ public:
 	float dist;
 	float startTiltAngle;
 	float startYawAngle;
-	
+	float velocity;
 
 
 	static vector<Missile> missileList;

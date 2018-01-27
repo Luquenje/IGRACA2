@@ -3,7 +3,7 @@
 
 vector<Missile> Missile::missileList;
 
-Missile::Missile(float xpos, float ypos, float zpos, float tilt, float yaw)
+Missile::Missile(float xpos, float ypos, float zpos, float tilt, float yaw, float Initvelocity)
 {
 	yellowPlasticMaterial = {
 		{ 0.4f,  0.4f, 0.0f, 1.0f }, // Ambient 
@@ -17,6 +17,10 @@ Missile::Missile(float xpos, float ypos, float zpos, float tilt, float yaw)
 	startTiltAngle = tilt;
 	startYawAngle = yaw;
 	timePassed = 0;
+	velocity = Initvelocity;
+	x = 0;
+	y = 0;
+	z = 0;
 }
 
 
@@ -49,11 +53,11 @@ float Missile::degToRad(float degAngle)
 
 void Missile::DrawMissile()
 {
-			dist = 20 * cos(degToRad(startTiltAngle)) * timePassed;//yawangle
-			x =   dist*cos(degToRad(startYawAngle ));
-			z =  dist*sin(degToRad(startYawAngle ));
+			dist = velocity * cos(degToRad(startTiltAngle)) * timePassed;//yawangle
+			x +=   dist*cos(degToRad(startYawAngle ));
+			z +=  dist*sin(degToRad(startYawAngle ));
 
-			y = 20 * sin(degToRad(startTiltAngle )) * timePassed - 0.5*9.81*pow(timePassed, 2);
+			y += velocity * sin(degToRad(startTiltAngle )) * timePassed - 0.5*9.81*pow(timePassed, 2);
 			
 			GLUquadric *Object = gluNewQuadric();
 
@@ -64,9 +68,14 @@ void Missile::DrawMissile()
 
 
 			glPushMatrix();
+			if (y <= -1.3) {
+				y = -1.3;
+				velocity = 0;
+			}
+
 			glTranslatef(xMissile + x, yMissile + y, zMissile + z);
 			glRotatef(90, 0, 1.0, 0);
-			glRotatef(startTiltAngle + fmod(startYawAngle, 180) > 0 ? timePassed * 40 : -timePassed * 40, 0, 0, 1);
+			//glRotatef(startTiltAngle + fmod(startYawAngle, 180) > 0 ? timePassed * 40 : -timePassed * 40, 0, 0, 1);
 			glRotatef(-startYawAngle, 0, 1.0, 0);
 			
 

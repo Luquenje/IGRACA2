@@ -163,7 +163,7 @@ void Tank::Rotate(float angle) {
 	yRotation = yRotation + angle;
 }
 
-void Tank::TankUpdate(double deltaTime) {
+void Tank::TankUpdate(double deltaTime, float velocity) {
 	glPushMatrix();
 	glLoadIdentity();
 
@@ -257,7 +257,7 @@ void Tank::TankUpdate(double deltaTime) {
 		yMissileRot = tiltAngle * 180 / 3.1415926535;
 
 
-		Missile missile = Missile(xMissile, yMissile, zMissile, yMissileRot, xMissileRot);
+		Missile missile = Missile(xMissile, yMissile, zMissile, yMissileRot, xMissileRot, velocity);
 		Missile::missileList.push_back(missile);
 	}
 

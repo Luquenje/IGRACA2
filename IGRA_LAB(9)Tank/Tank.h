@@ -70,7 +70,7 @@ public:
 	void DrawUpperArm();
 	void DrawJoint();
 	void Shoot(WPARAM wParam, double deltaTime);
-	void TankUpdate(double deltaTime);
+	void TankUpdate(double deltaTime, float velocity);
 
 
 	double GetDeltaTime(double deltatime);

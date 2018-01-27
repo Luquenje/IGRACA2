@@ -54,6 +54,7 @@ float rotateRight = 0.0;
 bool stop = false;
 
 Tank* tank;
+float bulletVelocity = 0;
 
 float xMouseOpenGL;
 float yMouseOpenGL;
@@ -319,7 +320,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_IGRALAB));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_IGRALAB);
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDR_MENU2);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -361,6 +362,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    UpdateWindow(hWnd);
    ReSizeGLScene(width, height);
 
+   CheckMenuItem(GetMenu(hWnd), ID_SPEED_MEDIUM, MF_CHECKED);
+   bulletVelocity = 4;
    return TRUE;
 }
 
@@ -384,6 +387,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             // Parse the menu selections:
             switch (wmId)
             {
+			case ID_SPEED_SLOW:
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_SLOW, MF_CHECKED);
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_MEDIUM, MF_UNCHECKED);
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_FAST, MF_UNCHECKED);
+				bulletVelocity = 1;
+				break;
+			case ID_SPEED_MEDIUM:
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_SLOW, MF_UNCHECKED);
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_MEDIUM, MF_CHECKED);
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_FAST, MF_UNCHECKED);
+				bulletVelocity = 4;
+				break;
+			case ID_SPEED_FAST:
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_SLOW, MF_UNCHECKED);
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_MEDIUM, MF_UNCHECKED);
+				CheckMenuItem(GetMenu(hWnd), ID_SPEED_FAST, MF_CHECKED);
+				bulletVelocity = 8;
+				break;
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
@@ -603,7 +624,7 @@ void DrawGLScene() {
 	//moveFoward -= accelerator;
 
 	Missile::SetTimePassed(GetTimePassedSinceLastTime());
-	tank->TankUpdate(GetTimePassedSinceLastTime());
+	tank->TankUpdate(GetTimePassedSinceLastTime(), bulletVelocity);
 	DrawPlane();
 	glEnable(GL_LIGHTING);
 	//glTranslatef(0, 0, moveFoward);
